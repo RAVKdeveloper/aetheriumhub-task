@@ -8,24 +8,18 @@ import background from "../assets/images/mode1.gif";
 import bgMusic from "../assets/audio/memory-bg.mp3";
 import axios from "axios";
 
-
-
-
 const defaultDifficulty = "Easy";
 
 // Card Images
 const cardImages = [
-    { id: 1, image: "/images/meteor.png" },
-    { id: 2, image: "/images/meteor.png" },
-    { id: 3, image: "/images/comet.png" },
-    { id: 4, image: "/images/comet.png" },
-  ];
+  { id: 1, image: "/images/meteor.png" },
+  { id: 2, image: "/images/meteor.png" },
+  { id: 3, image: "/images/comet.png" },
+  { id: 4, image: "/images/comet.png" },
+];
 
 // Audio files for matching and final congratulation
-const matchAudioFiles = [
-  "/audio/wonderful.mp3",
-
-];
+const matchAudioFiles = ["/audio/wonderful.mp3"];
 
 const congratsAudio = "/audio/congrats.mp3"; // Final congratulations audio
 
@@ -40,13 +34,20 @@ const shuffleArray = (array) => {
 };
 const saveGameData = async (gameData) => {
   try {
-    const response = await axios.post("http://localhost:5000/api/memory/save", gameData, {
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await axios.post(
+      "http://localhost:5200/api/memory/save",
+      gameData,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     console.log("Game data saved successfully", response.data);
   } catch (error) {
-    console.error("Error saving game data:", error.response ? error.response.data : error.message);
+    console.error(
+      "Error saving game data:",
+      error.response ? error.response.data : error.message
+    );
   }
 };
 
@@ -63,8 +64,7 @@ const StyledGameContainer = styled(Box)(({ theme, mouseDisabled }) => ({
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
   position: "relative",
-  pointerEvents: mouseDisabled ? "none" : "auto", 
-
+  pointerEvents: mouseDisabled ? "none" : "auto",
 }));
 
 const PixelButton = styled(Box)(({ theme }) => ({
@@ -171,30 +171,29 @@ const CardBack = styled(Box)({
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)",
 });
 
-
 const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  backgroundColor: '#2c2c54',  // Matching the game's background color
-  border: '2px solid #00d9ff', // Matching the pixel border
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  backgroundColor: "#2c2c54", // Matching the game's background color
+  border: "2px solid #00d9ff", // Matching the pixel border
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.5)", // Subtle shadow for pixel look
-  padding: '20px',
-  textAlign: 'center',
-  borderRadius: '10px', // Pixel rounded corners
+  padding: "20px",
+  textAlign: "center",
+  borderRadius: "10px", // Pixel rounded corners
 };
 
 const PixelTypography = styled(Typography)(({ theme }) => ({
   fontFamily: '"Press Start 2P", cursive', // Pixelated font style
-  fontSize: '24px',
-  color: '#fff',  // White text to stand out on the background
-  letterSpacing: '1px',
+  fontSize: "24px",
+  color: "#fff", // White text to stand out on the background
+  letterSpacing: "1px",
   textShadow: `
     -1px -1px 0 #ff0000,  
     1px -1px 0 #ff7f00, 
     1px 1px 0 #ffd700, 
-    -1px 1px 0 #ff4500`,  // Pixelated text shadow
+    -1px 1px 0 #ff4500`, // Pixelated text shadow
 }));
 
 const PixelButtonModal = styled(Button)(({ theme }) => ({
@@ -230,10 +229,18 @@ const Card = ({ card, handleClick, flipped, matched }) => {
     <CardContainer onClick={handleClick}>
       <CardInner style={{ transform }}>
         <CardFront>
-          <img src={card.image} alt="Card front" style={{ width: "140%", height: "140%" }} />
+          <img
+            src={card.image}
+            alt="Card front"
+            style={{ width: "140%", height: "140%" }}
+          />
         </CardFront>
         <CardBack>
-          <img src="/images/Back2.png" alt="Card back" style={{ width: "120%", height: "120%" }} />
+          <img
+            src="/images/Back2.png"
+            alt="Card back"
+            style={{ width: "120%", height: "120%" }}
+          />
         </CardBack>
       </CardInner>
     </CardContainer>
@@ -250,7 +257,7 @@ Card.propTypes = {
   matched: PropTypes.bool.isRequired,
 };
 
-const  MemoryEasy = () => {
+const MemoryEasy = () => {
   const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
@@ -261,28 +268,28 @@ const  MemoryEasy = () => {
   const [initialReveal, setInitialReveal] = useState(true);
   const [musicStarted, setMusicStarted] = useState(false);
   const [mouseDisabled, setMouseDisabled] = useState(false);
-  const [bgVolume] = useState(parseInt(localStorage.getItem("bgVolume"), 10) || 0);
-  const [sfxVolume] = useState(parseInt(localStorage.getItem("sfxVolume"), 10) || 0);
+  const [bgVolume] = useState(
+    parseInt(localStorage.getItem("bgVolume"), 10) || 0
+  );
+  const [sfxVolume] = useState(
+    parseInt(localStorage.getItem("sfxVolume"), 10) || 0
+  );
   const audioRef = useRef(null);
   const [audioIndex, setAudioIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
 
-
-
   const handleSaveNewGame = () => {
     saveGameData({
-        userID,
-        gameDate: new Date(),
-        failed: failedAttempts,
-        difficulty: defaultDifficulty,
-        completed: 0,
-        timeTaken: timer,
+      userID,
+      gameDate: new Date(),
+      failed: failedAttempts,
+      difficulty: defaultDifficulty,
+      completed: 0,
+      timeTaken: timer,
     });
-};
-  
+  };
+
   const handleNewGame = () => {
-   
-    
     setCards(shuffleArray(cardImages));
     setMatchedCards([]);
     setFlippedCards([]);
@@ -292,18 +299,15 @@ const  MemoryEasy = () => {
     setInitialReveal(true);
     setAudioIndex(0); // Reset audio index
 
-    
     const mouseDisableDuration = 2000;
     setMouseDisabled(true);
     setTimeout(() => {
-      setMouseDisabled(false);  // Re-enable mouse events after mouseDisableDuration
+      setMouseDisabled(false); // Re-enable mouse events after mouseDisableDuration
     }, mouseDisableDuration);
 
-  
     setTimeout(() => {
       setInitialReveal(false);
       setTimerActive(true);
-   
     }, 1500);
   };
   const handleBackButton = () => {
@@ -319,14 +323,15 @@ const  MemoryEasy = () => {
   const handleModalNo = () => {
     setOpenModal(false); // Close the modal and resume game
   };
-  
- 
+
   useEffect(() => {
     handleNewGame();
     const handleFirstClick = () => {
       if (!musicStarted && audioRef.current) {
         audioRef.current.volume = bgVolume / 100;
-        audioRef.current.play().catch((error) => console.error("Audio play error:", error));
+        audioRef.current
+          .play()
+          .catch((error) => console.error("Audio play error:", error));
         setMusicStarted(true);
       }
     };
@@ -364,39 +369,37 @@ const  MemoryEasy = () => {
     }
   }, [flippedCards, audioIndex, sfxVolume]);
 
-  
   useEffect(() => {
     if (matchedCards.length === cards.length && cards.length > 0) {
-        // Play the congratulations audio
-        const congrats = new Audio(congratsAudio);
-        congrats.volume = sfxVolume / 100;
-        congrats.play();
+      // Play the congratulations audio
+      const congrats = new Audio(congratsAudio);
+      congrats.volume = sfxVolume / 100;
+      congrats.play();
 
-        // Stop the timer before saving the game data
-        setTimerActive(false);
+      // Stop the timer before saving the game data
+      setTimerActive(false);
 
-        // Ensure the game data is saved only once
-        const saveData = async () => {
-            try {
-                await saveGameData({
-                    userID,
-                    gameDate: new Date(),
-                    failed: failedAttempts,
-                    difficulty: defaultDifficulty,
-                    completed: 1,  
-                    timeTaken: timer,
-                });
-                localStorage.setItem("gameCompleted", "true");
-                setTimeout(() => navigate("/congt-easy"), 1000);
-            } catch (error) {
-                console.error("Error saving game data:", error);
-            }
-        };
+      // Ensure the game data is saved only once
+      const saveData = async () => {
+        try {
+          await saveGameData({
+            userID,
+            gameDate: new Date(),
+            failed: failedAttempts,
+            difficulty: defaultDifficulty,
+            completed: 1,
+            timeTaken: timer,
+          });
+          localStorage.setItem("gameCompleted", "true");
+          setTimeout(() => navigate("/congt-easy"), 1000);
+        } catch (error) {
+          console.error("Error saving game data:", error);
+        }
+      };
 
-        saveData();
+      saveData();
     }
-}, [matchedCards, cards.length, navigate, sfxVolume, failedAttempts, timer]);
-
+  }, [matchedCards, cards.length, navigate, sfxVolume, failedAttempts, timer]);
 
   const userID = localStorage.getItem("userID"); // ✅ Fetch from local storage or auth context
   if (!userID) {
@@ -405,7 +408,11 @@ const  MemoryEasy = () => {
   }
 
   const handleCardClick = (card) => {
-    if (!matchedCards.includes(card.id) && flippedCards.length < 2 && !flippedCards.some((c) => c.id === card.id)) {
+    if (
+      !matchedCards.includes(card.id) &&
+      flippedCards.length < 2 &&
+      !flippedCards.some((c) => c.id === card.id)
+    ) {
       setFlippedCards((prev) => [...prev, card]);
     }
   };
@@ -413,54 +420,84 @@ const  MemoryEasy = () => {
   return (
     <StyledGameContainer mouseDisabled={mouseDisabled}>
       <audio ref={audioRef} src={bgMusic} loop />
-      <PixelButton onClick={handleBackButton} sx={{ alignSelf: "flex-start", margin: 2 }}>
+      <PixelButton
+        onClick={handleBackButton}
+        sx={{ alignSelf: "flex-start", margin: 2 }}
+      >
         Back
       </PixelButton>
       <PixelTimerBox>Timer: {timer}s</PixelTimerBox>
       <PixelBox>Learning Moments: {failedAttempts}</PixelBox>
-      <Grid container spacing={6} justifyContent="center" sx={{ maxWidth: 600, marginTop: "-80px" }}>
-  {cards.map((card) => (
-    <Grid item xs={6} key={card.id}> {/* Changed from xs={3} to xs={6} for 2 cards per row */}
-      <Card
-        card={card}
-        handleClick={() => handleCardClick(card)}
-        flipped={
-          initialReveal ||
-          flippedCards.some((c) => c.id === card.id) ||
-          matchedCards.includes(card.id)
-        }
-        matched={matchedCards.includes(card.id)}
-      />
-    </Grid>
-  ))}
-</Grid>
+      <Grid
+        container
+        spacing={6}
+        justifyContent="center"
+        sx={{ maxWidth: 600, marginTop: "-80px" }}
+      >
+        {cards.map((card) => (
+          <Grid item xs={6} key={card.id}>
+            {" "}
+            {/* Changed from xs={3} to xs={6} for 2 cards per row */}
+            <Card
+              card={card}
+              handleClick={() => handleCardClick(card)}
+              flipped={
+                initialReveal ||
+                flippedCards.some((c) => c.id === card.id) ||
+                matchedCards.includes(card.id)
+              }
+              matched={matchedCards.includes(card.id)}
+            />
+          </Grid>
+        ))}
+      </Grid>
       <Box sx={{ mt: 2, textAlign: "center" }}>
-     
-        <PixelButton onClick={() => { handleSaveNewGame(); handleNewGame(); }} sx={{ mt: 2}}>
+        <PixelButton
+          onClick={() => {
+            handleSaveNewGame();
+            handleNewGame();
+          }}
+          sx={{ mt: 2 }}
+        >
           New Game
         </PixelButton>
       </Box>
 
-
       <Modal open={openModal} onClose={handleModalNo}>
-  <Box sx={modalStyle}>
-    <PixelTypography variant="h6">
-      Are you sure you want to go back to the play page?
-    </PixelTypography>
-    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, marginTop: 2 }}>
-      <PixelButtonModal onClick={() => { handleSaveNewGame(); handleModalYes(); }} variant="contained" color="primary">
-        Yes
-      </PixelButtonModal>
-      <PixelButtonModal onClick={handleModalNo} variant="contained" color="secondary">
-        No
-      </PixelButtonModal>
-    </Box>
-  </Box>
-</Modal>
+        <Box sx={modalStyle}>
+          <PixelTypography variant="h6">
+            Are you sure you want to go back to the play page?
+          </PixelTypography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 2,
+              marginTop: 2,
+            }}
+          >
+            <PixelButtonModal
+              onClick={() => {
+                handleSaveNewGame();
+                handleModalYes();
+              }}
+              variant="contained"
+              color="primary"
+            >
+              Yes
+            </PixelButtonModal>
+            <PixelButtonModal
+              onClick={handleModalNo}
+              variant="contained"
+              color="secondary"
+            >
+              No
+            </PixelButtonModal>
+          </Box>
+        </Box>
+      </Modal>
     </StyledGameContainer>
   );
 };
-
-
 
 export default MemoryEasy;
